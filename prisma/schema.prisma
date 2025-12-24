@@ -14,6 +14,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+//modelo de usuario
 model User {
   id         Int      @id @default(autoincrement())
   MCName String
@@ -25,7 +26,54 @@ model User {
   updatedAt  DateTime @updatedAt
 }
 
+// Definición de Enums para los roles
 enum Role{
   USER
   ADMIN
+}
+
+// modelo de las cartas
+model Card {
+  id          Int         @id @default(autoincrement())
+  name        String      @unique
+  elemento    ElementType
+  type        CardType
+  description String      @db.Text
+  power       Int
+  rareza      Rareza
+  image       String      
+  isActive    Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+// Definición de Enums de las cartas
+enum ElementType {
+  fuego
+  agua
+  viento
+  tierra
+  rayo
+  hielo
+  santo
+  oscuridad
+}
+
+enum CardType {
+  arma
+  consumible
+  invocacion
+}
+
+enum Rareza {
+  principiante
+  comun
+  poco_comun
+  aventurero
+  raro
+  unico
+  legendario
+  corrupto
+  mitico
+  soberano
 }
