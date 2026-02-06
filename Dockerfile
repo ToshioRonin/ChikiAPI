@@ -6,6 +6,9 @@ COPY package.json ./
 RUN npm install
 
 COPY . .
+COPY prisma ./prisma
+COPY prisma.config.ts ./
+COPY .env ./
 RUN npx prisma generate
 
 RUN mkdir -p uploads
