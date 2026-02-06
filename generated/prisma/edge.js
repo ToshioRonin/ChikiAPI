@@ -39,12 +39,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 7.3.0
- * Query Engine version: 9d6ad21cbbceab97458517b147a6a09ff43aa735
+ * Prisma Client JS version: 7.2.0
+ * Query Engine version: 0c8ef2ce45c83248ab3df073180d5eda9e8be7a3
  */
 Prisma.prismaVersion = {
-  client: "7.3.0",
-  engine: "9d6ad21cbbceab97458517b147a6a09ff43aa735"
+  client: "7.2.0",
+  engine: "0c8ef2ce45c83248ab3df073180d5eda9e8be7a3"
 }
 
 Prisma.PrismaClientKnownRequestError = PrismaClientKnownRequestError;
@@ -206,8 +206,8 @@ exports.Prisma.ModelName = {
  */
 const config = {
   "previewFeatures": [],
-  "clientVersion": "7.3.0",
-  "engineVersion": "9d6ad21cbbceab97458517b147a6a09ff43aa735",
+  "clientVersion": "7.2.0",
+  "engineVersion": "0c8ef2ce45c83248ab3df073180d5eda9e8be7a3",
   "activeProvider": "postgresql",
   "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\n//modelo de usuario\nmodel User {\n  id        Int      @id @default(autoincrement())\n  MCName    String\n  DCName    String\n  email     String   @unique\n  password  String\n  role      Role     @default(USER)\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  eventRegistrations EventRegistration[]\n}\n\n// Definición de Enums para los roles\nenum Role {\n  USER\n  ADMIN\n}\n\n// modelo de las cartas\nmodel Card {\n  id          Int         @id @default(autoincrement())\n  name        String      @unique\n  elemento    ElementType\n  type        CardType\n  description String      @db.Text\n  power       Int\n  rareza      Rareza\n  image       String\n  isActive    Boolean     @default(true)\n  createdAt   DateTime    @default(now())\n  updatedAt   DateTime    @updatedAt\n}\n\n// Definición de Enums de las cartas\nenum ElementType {\n  fuego\n  agua\n  viento\n  tierra\n  rayo\n  hielo\n  santo\n  oscuridad\n}\n\nenum CardType {\n  arma\n  consumible\n  invocacion\n}\n\nenum Rareza {\n  principiante\n  comun\n  poco_comun\n  aventurero\n  raro\n  unico\n  legendario\n  corrupto\n  mitico\n  soberano\n}\n\n// Modelo de eventos\nmodel Event {\n  id          Int         @id @default(autoincrement())\n  title       String\n  tag         String\n  description String      @db.Text\n  image       String\n  status      EventStatus @default(proximamente)\n  isFeatured  Boolean     @default(false)\n\n  // Fechas y Control\n  startDate DateTime\n  endDate   DateTime\n\n  // Inscripciones\n  maxParticipants Int?\n\n  // Recompensas (puedes guardarlo como texto o JSON)\n  rewards String? @db.Text\n\n  // Relaciones\n  participants EventRegistration[]\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n\n// Tabla intermedia para las inscripciones\nmodel EventRegistration {\n  id       Int      @id @default(autoincrement())\n  joinedAt DateTime @default(now())\n\n  // Relaciones\n  userId  Int\n  user    User  @relation(fields: [userId], references: [id])\n  eventId Int\n  event   Event @relation(fields: [eventId], references: [id])\n\n  @@unique([userId, eventId])\n}\n\nenum EventStatus {\n  proximamente\n  activo\n  finalizado\n}\n"
 }
@@ -215,13 +215,12 @@ const config = {
 config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"MCName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"DCName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"role\",\"kind\":\"enum\",\"type\":\"Role\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"eventRegistrations\",\"kind\":\"object\",\"type\":\"EventRegistration\",\"relationName\":\"EventRegistrationToUser\"}],\"dbName\":null},\"Card\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"elemento\",\"kind\":\"enum\",\"type\":\"ElementType\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"CardType\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"power\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"rareza\",\"kind\":\"enum\",\"type\":\"Rareza\"},{\"name\":\"image\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"isActive\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Event\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tag\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"image\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"EventStatus\"},{\"name\":\"isFeatured\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"startDate\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"endDate\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"maxParticipants\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"rewards\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"participants\",\"kind\":\"object\",\"type\":\"EventRegistration\",\"relationName\":\"EventToEventRegistration\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"EventRegistration\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"joinedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"EventRegistrationToUser\"},{\"name\":\"eventId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"event\",\"kind\":\"object\",\"type\":\"Event\",\"relationName\":\"EventToEventRegistration\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
 config.compilerWasm = {
-  getRuntime: async () => require('./query_compiler_fast_bg.js'),
+  getRuntime: async () => require('./query_compiler_bg.js'),
   getQueryCompilerWasmModule: async () => {
     const loader = (await import('#wasm-compiler-loader')).default
     const compiler = (await loader).default
     return compiler
-  },
-  importName: './query_compiler_fast_bg.js',
+  }
 }
 if (typeof globalThis !== 'undefined' && globalThis['DEBUG'] || (typeof process !== 'undefined' && process.env && process.env.DEBUG) || undefined) {
   Debug.enable(typeof globalThis !== 'undefined' && globalThis['DEBUG'] || (typeof process !== 'undefined' && process.env && process.env.DEBUG) || undefined)
