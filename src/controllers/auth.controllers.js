@@ -7,18 +7,37 @@ export const register = async (req, res) => {
   try {
     const { MCName, DCName, email, password } = req.body;
 
-    const existingUser = await prisma.user.findUnique({ where: { email } });
-    if (existingUser) return res.status(400).json({ message: "Email already in use" });
+    const existingUser = await prisma.user.findUnique({ 
+      where: { email } 
+    });
+    
+    if (existingUser) {
+      return res.status(400).json({ message: "El correo electrónico ya está registrado" });
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = await prisma.user.create({
-      data: { MCName, DCName, email, password: hashedPassword },
+      data: { 
+        MCName, 
+        DCName, 
+        email, 
+        password: hashedPassword,
+        role: "USER" 
+      },
     });
 
-    res.status(201).json({ message: "User registered successfully", userId: newUser.id });
+    return res.status(201).json({ 
+      message: "Usuario registrado con éxito", 
+      userId: newUser.id 
+    });
+
   } catch (error) {
-    res.status(500).json({ message: "Error registering user", error: error.message });
+    console.error("ERROR EN REGISTER:", error);
+    return res.status(500).json({ 
+      message: "Error interno en el servidor al registrar usuario",
+      error: error.message 
+    });
   }
 };
 
@@ -50,9 +69,9 @@ export const login = async (req, res) => {
     // Enviar Refresh Token en una cookie HTTPOnly
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', // Solo HTTPS en producción
+      secure: process.env.NODE_ENV === 'production', 
       sameSite: 'strict',
-      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 días
+      maxAge: 7 * 24 * 60 * 60 * 1000 
     });
 
     res.json({

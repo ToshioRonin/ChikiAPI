@@ -21,13 +21,13 @@ services:
     container_name: chiki-backend
     restart: always
     ports:
-      - "3000:3000"
+      - "3001:3001"
     depends_on:
       - db
     environment:
       - NODE_ENV=development
       - DATABASE_URL=postgresql://user_admin:password123@db:5432/ChikiAPIDB?schema=public
-      - PORT=3000
+      - PORT=3001
       - JWT_SECRET=tu_clave_secreta_super_segura
     volumes:
       - .:/app             

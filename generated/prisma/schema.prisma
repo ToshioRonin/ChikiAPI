@@ -1,0 +1,127 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+//modelo de usuario
+model User {
+  id        Int      @id @default(autoincrement())
+  MCName    String
+  DCName    String
+  email     String   @unique
+  password  String
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  eventRegistrations EventRegistration[]
+}
+
+// Definición de Enums para los roles
+enum Role {
+  USER
+  ADMIN
+}
+
+// modelo de las cartas
+model Card {
+  id          Int         @id @default(autoincrement())
+  name        String      @unique
+  elemento    ElementType
+  type        CardType
+  description String      @db.Text
+  power       Int
+  rareza      Rareza
+  image       String
+  isActive    Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+// Definición de Enums de las cartas
+enum ElementType {
+  fuego
+  agua
+  viento
+  tierra
+  rayo
+  hielo
+  santo
+  oscuridad
+}
+
+enum CardType {
+  arma
+  consumible
+  invocacion
+}
+
+enum Rareza {
+  principiante
+  comun
+  poco_comun
+  aventurero
+  raro
+  unico
+  legendario
+  corrupto
+  mitico
+  soberano
+}
+
+// Modelo de eventos
+model Event {
+  id          Int         @id @default(autoincrement())
+  title       String
+  tag         String
+  description String      @db.Text
+  image       String
+  status      EventStatus @default(proximamente)
+  isFeatured  Boolean     @default(false)
+
+  // Fechas y Control
+  startDate DateTime
+  endDate   DateTime
+
+  // Inscripciones
+  maxParticipants Int?
+
+  // Recompensas (puedes guardarlo como texto o JSON)
+  rewards String? @db.Text
+
+  // Relaciones
+  participants EventRegistration[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Tabla intermedia para las inscripciones
+model EventRegistration {
+  id       Int      @id @default(autoincrement())
+  joinedAt DateTime @default(now())
+
+  // Relaciones
+  userId  Int
+  user    User  @relation(fields: [userId], references: [id])
+  eventId Int
+  event   Event @relation(fields: [eventId], references: [id])
+
+  @@unique([userId, eventId])
+}
+
+enum EventStatus {
+  proximamente
+  activo
+  finalizado
+}

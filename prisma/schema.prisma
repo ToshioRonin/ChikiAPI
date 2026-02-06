@@ -5,25 +5,26 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 //modelo de usuario
 model User {
   id         Int      @id @default(autoincrement())
-  MCName String
-  DCName  String
+  MCName     String
+  DCName     String
   email      String   @unique
   password   String
   role       Role     @default(USER)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+
+  eventRegistrations EventRegistration[]
 }
 
 // Definición de Enums para los roles
@@ -76,4 +77,51 @@ enum Rareza {
   corrupto
   mitico
   soberano
+}
+
+// Modelo de eventos
+model Event {
+  id            Int           @id @default(autoincrement())
+  title         String
+  tag           String        
+  description   String        @db.Text
+  image         String        
+  status        EventStatus   @default(proximamente)
+  isFeatured    Boolean       @default(false) 
+  
+  // Fechas y Control
+  startDate     DateTime
+  endDate       DateTime
+  
+  // Inscripciones
+  maxParticipants Int?        
+  
+  // Recompensas (puedes guardarlo como texto o JSON)
+  rewards       String?       @db.Text
+  
+  // Relaciones
+  participants  EventRegistration[]
+  
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+// Tabla intermedia para las inscripciones
+model EventRegistration {
+  id        Int      @id @default(autoincrement())
+  joinedAt  DateTime @default(now())
+  
+  // Relaciones
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  eventId   Int
+  event     Event    @relation(fields: [eventId], references: [id])
+
+  @@unique([userId, eventId]) 
+}
+
+enum EventStatus {
+  proximamente
+  activo
+  finalizado
 }

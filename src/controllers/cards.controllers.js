@@ -13,6 +13,30 @@ export const getAllCards = async (req, res) => {
   }
 };
 
+export const getCardById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const card = await prisma.card.findUnique({
+      where: {
+        id: parseInt(id),
+      },
+    });
+
+    if (!card) {
+      return res.status(404).json({ message: "Carta no encontrada en el mazo" });
+    }
+
+    return res.json(card);
+  } catch (error) {
+    console.error("ERROR AL OBTENER CARTA:", error);
+    return res.status(500).json({ 
+      message: "Error al consultar la carta rúnica",
+      error: error.message 
+    });
+  }
+};
+
 // Obtener solo las cartas que han sido "borradas lógicamente" (la papelera)
 export const getTrashedCards = async (req, res) => {
   try {
