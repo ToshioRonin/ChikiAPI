@@ -1,6 +1,6 @@
-// Importas desde la carpeta que definiste en el schema
-const { PrismaClient } = require('../../generated/prisma');
+import pkg from '@prisma/client';
 
+const { PrismaClient } = pkg;
 const prisma = new PrismaClient();
 
-module.exports = prisma;
+export default prisma;
